@@ -12,8 +12,9 @@ class UsersController < ApplicationController
   	@user = User.new
   end
 
-  def create
+  def create    
     @user = User.new(params[:user])
+    #logger.info("#################{@user.inspect}")
     if @user.save
       sign_in @user
       flash[:success] = "Welcome to the Sample App!"
@@ -24,6 +25,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @user = User.find(params[:id])
   end
 
   def index
@@ -53,6 +55,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @users = @user.followers.paginate(page: params[:page])
     render 'show_follow'
+  end
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User destroyed."
+    redirect_to users_url
   end
 
   private
